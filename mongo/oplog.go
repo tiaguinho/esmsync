@@ -17,18 +17,30 @@ type Oplog struct {
 //struct of Oplog insert object
 type OplogInsert struct {
 	Oplog `bson:",inline"`
+	O     bson.M `bson:"o"`
 }
 
 //struct of Oplog update object
 type OplogUpdate struct {
 	Oplog `bson:",inline"`
 	O2    bson.ObjectId `bson:"o2>_id"`
+	O     bson.M        `bson:"o"`
 }
 
 type OplogDelete struct {
 	Oplog `bson:",inline"`
 	B     bool          `bson:"b"`
 	O     bson.ObjectId `bson:"o>_id"`
+}
+
+//return all inserted oplog objects
+func GetOplogsInsert(session *mgo.Session, database, collection string) []OplogInsert {
+	c := session.DB("local").C("oplog.rs")
+
+	var logs []OplogInsert
+	c.Find(bson.M{"op": "i", "ns": database + "." + collection, "ts": bson.M{"$type": 17}}).All(&logs)
+
+	return logs
 }
 
 //return all updated oplog objects
