@@ -1,3 +1,27 @@
-{
-	
-}
+[
+	{
+		"mongo" : "nome",
+		"type" : "string",
+		"es" : "nome"
+	},
+	{
+		"mongo" : "barcode_ean",
+		"type" : "array",
+		"es" : "ean"
+	},
+	{
+	 	"mongo" : "sku",
+		"type" : "array",
+		"es" : "sku"
+	},
+	{
+	 	"mongo" : "estoque>barcode_ean",
+		"type" : "array",
+		"es" : "ean"
+	},
+	{
+	 	"mongo" : "estoque>sku",
+		"type" : "array",
+		"es" : "sku"
+	}
+] 
