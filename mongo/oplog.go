@@ -6,11 +6,11 @@ import (
 
 //base struct of Oplog
 type Oplog struct {
-	Ts bson.MongoTimestamp `bson:"ts"`
-	H  int                 `bson:"h"`
-	V  int                 `bson:"v"`
-	Op string              `bson:"op"`
-	Ns string              `bson:"ns"`
+	Ts int64  `bson:"ts"`
+	H  int    `bson:"h"`
+	V  int    `bson:"v"`
+	Op string `bson:"op"`
+	Ns string `bson:"ns"`
 }
 
 //struct of Oplog insert object

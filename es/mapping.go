@@ -42,10 +42,12 @@ func Mapping(oplog interface{}) (object Elasticsearch) {
 		}
 	case "u":
 		s := oplog.(mongo.OplogUpdate)
-		data = s.O["$set"].(map[string]interface{})
-		object = Elasticsearch{
-			Id:        s.O2["_id"].Hex(),
-			Operation: "u",
+		if s.O["$set"] != nil {
+			data = s.O["$set"].(map[string]interface{})
+			object = Elasticsearch{
+				Id:        s.O2["_id"].Hex(),
+				Operation: "u",
+			}
 		}
 	case "d":
 		s := oplog.(mongo.OplogDelete)
