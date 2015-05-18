@@ -5,7 +5,6 @@ import (
 	"github.com/tiaguinho/esmsync/es"
 	"github.com/tiaguinho/esmsync/mongo"
 	"io/ioutil"
-	"os"
 	"reflect"
 )
 
@@ -41,9 +40,11 @@ func main() {
 func sync(oplogs interface{}) {
 	length := reflect.ValueOf(oplogs).Len()
 
-	for i := 1; i < length; i++ {
-		es.Mapping(reflect.ValueOf(oplogs).Index(i).Interface())
+	for i := 0; i < length; i++ {
+		esdata := es.Mapping(reflect.ValueOf(oplogs).Index(i).Interface())
 
-		os.Exit(400)
+		if len(esdata.Data) > 0 {
+			es.Execute(esdata)
+		}
 	}
 }
