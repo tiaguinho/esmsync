@@ -1,6 +1,7 @@
 package es
 
 import (
+	"fmt"
 	"github.com/mattbaird/elastigo/lib"
 )
 
@@ -35,6 +36,18 @@ func Connect(conf ElasticConf) *Client {
 
 	client.Conn = elastigo.NewConn()
 	client.Conn.SetPort(conf.Port)
+
+	//check if index exists
+	exists, _ := client.Conn.IndicesExists(conf.Index)
+	if exists == false {
+		client.Conn.CreateIndex(conf.Index)
+	}
+
+	//check health of the cluster
+	health, _ := client.Conn.Health(conf.Index)
+	if health.Status != "green" {
+		client.Conn.DoCommand("PUT", "/_settings", nil, map[string]map[string]int{"index": {"number_of_replicas": 0}})
+	}
 
 	return client
 }
