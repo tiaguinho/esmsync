@@ -12,13 +12,16 @@ import (
 	"time"
 )
 
-type Config struct {
+type Esmsync struct {
+	Config struct {
+		Force bool
+	}
 	Mongo         mongo.MongoConf
 	Elasticsearch es.ElasticConf
 }
 
 //configuration struct for yaml data
-var conf Config
+var conf Esmsync
 
 //elasticserach client
 var elastic *es.Client
@@ -30,7 +33,9 @@ var mongodb *mongo.Client
 var LastTs int64
 
 //create file to control the data to sincronize
-func init() {
+func Start() {
+	fmt.Println("Starting sync server")
+
 	content, err := ioutil.ReadFile("./config/esmsync.yaml")
 	if err == nil {
 		err = yaml.Unmarshal(content, &conf)
@@ -46,6 +51,8 @@ func init() {
 	content, err = ioutil.ReadFile("./esmsync.txt")
 	if err == nil {
 		LastTs, _ = strconv.ParseInt(string(content), 10, 64)
+	} else if conf.Config.Force == true {
+		syncAll()
 	}
 }
 
@@ -71,7 +78,7 @@ func Do(last_ts int64) {
 		total += sync(deleteOplogs)
 	}
 
-	fmt.Println(total, " documents synchonized")
+	fmt.Println(total, " documents synchronized")
 }
 
 //create a listener to oplog collection

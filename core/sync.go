@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"github.com/tiaguinho/esmsync/es"
 	"reflect"
 )
@@ -21,4 +22,14 @@ func sync(oplogs interface{}) int64 {
 	}
 
 	return total
+}
+
+//sync all data on the collection
+func syncAll() {
+	oplogs := mongodb.GetAll()
+	if len(oplogs) > 0 {
+		total := sync(oplogs)
+
+		fmt.Println(total, " documents synchronized")
+	}
 }

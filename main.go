@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/tiaguinho/esmsync/core"
 	"github.com/tiaguinho/esmsync/mongo"
 )
 
 func main() {
-	fmt.Println("Starting sync server")
-
+	core.Start()
 	listen := core.Listen()
 
 	var docs []mongo.Oplog

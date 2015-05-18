@@ -43,3 +43,25 @@ func Connect(conf MongoConf) *Client {
 
 	return client
 }
+
+//return all documents
+func (c *Client) GetAll() []OplogInsert {
+	collection := c.Conn.DB(c.Conf.Database).C(c.Conf.Collection)
+
+	var docs []map[string]interface{}
+	collection.Find(nil).All(&docs)
+
+	logs := make([]OplogInsert, len(docs))
+	if len(docs) > 0 {
+		for index, doc := range docs {
+			logs[index] = OplogInsert{
+				Oplog: Oplog{
+					Op: "i",
+				},
+				O: doc,
+			}
+		}
+	}
+
+	return logs
+}
