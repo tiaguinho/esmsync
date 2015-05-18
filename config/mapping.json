@@ -6,22 +6,22 @@
 	},
 	{
 		"mongo" : "barcode_ean",
-		"type" : "array",
+		"type" : "slice",
 		"es" : "ean"
 	},
 	{
 	 	"mongo" : "sku",
-		"type" : "array",
+		"type" : "slice",
 		"es" : "sku"
 	},
 	{
 	 	"mongo" : "estoque>barcode_ean",
-		"type" : "array",
+		"type" : "slice",
 		"es" : "ean"
 	},
 	{
 	 	"mongo" : "estoque>sku",
-		"type" : "array",
+		"type" : "slice",
 		"es" : "sku"
 	}
 ] 
