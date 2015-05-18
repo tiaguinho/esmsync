@@ -17,20 +17,20 @@ type Oplog struct {
 //struct of Oplog insert object
 type OplogInsert struct {
 	Oplog `bson:",inline"`
-	O     bson.M `bson:"o"`
+	O     map[string]interface{} `bson:"o"`
 }
 
 //struct of Oplog update object
 type OplogUpdate struct {
 	Oplog `bson:",inline"`
-	O2    bson.ObjectId `bson:"o2>_id"`
-	O     bson.M        `bson:"o"`
+	O2    map[string]bson.ObjectId `bson:"o2"`
+	O     map[string]interface{}   `bson:"o`
 }
 
 type OplogDelete struct {
 	Oplog `bson:",inline"`
-	B     bool          `bson:"b"`
-	O     bson.ObjectId `bson:"o>_id"`
+	B     bool                     `bson:"b"`
+	O     map[string]bson.ObjectId `bson:"o"`
 }
 
 //return all inserted oplog objects
