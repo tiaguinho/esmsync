@@ -1,7 +1,6 @@
 package mongo
 
 import (
-	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -34,31 +33,31 @@ type OplogDelete struct {
 }
 
 //return all inserted oplog objects
-func GetOplogsInsert(session *mgo.Session, database, collection string) []OplogInsert {
-	c := session.DB("local").C("oplog.rs")
+func (c *Client) GetOplogsInsert() []OplogInsert {
+	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogInsert
-	c.Find(bson.M{"op": "i", "ns": database + "." + collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "i", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
 
 	return logs
 }
 
 //return all updated oplog objects
-func GetOplogsUpdate(session *mgo.Session, database, collection string) []OplogUpdate {
-	c := session.DB("local").C("oplog.rs")
+func (c *Client) GetOplogsUpdate() []OplogUpdate {
+	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogUpdate
-	c.Find(bson.M{"op": "u", "ns": database + "." + collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "u", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
 
 	return logs
 }
 
 //return all deleted oplog objects
-func GetOplogsDelete(session *mgo.Session, database, collection string) []OplogDelete {
-	c := session.DB("local").C("oplog.rs")
+func (c *Client) GetOplogsDelete() []OplogDelete {
+	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogDelete
-	c.Find(bson.M{"op": "d", "ns": database + "." + collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "d", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
 
 	return logs
 }

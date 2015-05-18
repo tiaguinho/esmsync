@@ -8,16 +8,22 @@ import (
 
 //mongodb config struct
 type MongoConf struct {
-	Server string `json:"server"`
-	Port   string `json:"port"`
-	User   string `json:"user"`
-	Pass   string `json:"pass"`
-	Db     string `json:"database"`
-	C      string `json:"collection"`
+	Server     string
+	Port       string
+	User       string
+	Pass       string
+	Database   string
+	Collection string
 }
 
-//return the connection with mongodb
-func GetConnection(conf MongoConf) *mgo.Session {
+//mongodb client struct
+type Client struct {
+	Conn *mgo.Session
+	Conf MongoConf
+}
+
+//return the client struct
+func Connect(conf MongoConf) *Client {
 	session, err := mgo.DialWithTimeout(conf.Server+":"+conf.Port, time.Second*60)
 	if err == nil {
 		if conf.User != "" {
@@ -30,5 +36,10 @@ func GetConnection(conf MongoConf) *mgo.Session {
 		log.Fatal(err)
 	}
 
-	return session
+	client := &Client{
+		Conn: session,
+		Conf: conf,
+	}
+
+	return client
 }

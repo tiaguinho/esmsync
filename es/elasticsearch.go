@@ -1,48 +1,49 @@
 package es
 
 import (
-	"encoding/json"
 	"github.com/mattbaird/elastigo/lib"
-	"io/ioutil"
 )
 
 //elasticsearch config struct
 type ElasticConf struct {
-	Server string `json:"server"`
-	Port   string `json:"port"`
-	User   string `json:"user"`
-	Pass   string `json:"pass"`
-	Index  string `json:"index"`
-	Type   string `json:"type"`
+	Server string
+	Port   string
+	User   string
+	Pass   string
+	Index  string
+	Type   string
 }
 
-var conf ElasticConf
+//elasticsearch client stuct
+type Client struct {
+	Conn *elastigo.Conn
+	Conf ElasticConf
+}
 
-var c *elastigo.Conn
+//struct to store data before sent request to elasticserach
+type Elasticsearch struct {
+	Id        string
+	Data      map[string]interface{}
+	Operation string
+}
 
 //create connection
-func init() {
-	content, err := ioutil.ReadFile("./config/elasticsearch.json")
-	if err == nil {
-		err = json.Unmarshal(content, &conf)
-		if err == nil {
-			c = elastigo.NewConn()
-			c.SetPort(conf.Port)
-		}
-	}
+func Connect(conf ElasticConf) *Client {
+	client := new(Client)
+
+	client.Conf = conf
+
+	client.Conn = elastigo.NewConn()
+	client.Conn.SetPort(conf.Port)
+
+	return client
 }
 
-//index object
-func Execute(esdata Elasticsearch) {
-	var response elastigo.BaseResponse
-
+//insert, update or delete index
+func (c *Client) Execute(esdata Elasticsearch) {
 	if esdata.Operation != "d" {
-		response, _ = c.Index(conf.Index, conf.Type, esdata.Id, nil, esdata.Data)
+		c.Conn.Index(c.Conf.Index, c.Conf.Type, esdata.Id, nil, esdata.Data)
 	} else {
-		response, _ = c.Delete(conf.Index, conf.Type, esdata.Id, nil)
-	}
-
-	if response.Ok {
-
+		c.Conn.Delete(c.Conf.Index, c.Conf.Type, esdata.Id, nil)
 	}
 }

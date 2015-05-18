@@ -1,0 +1,13 @@
+--- # esmsync configuration file
+mongo:
+  server: 127.0.0.1
+  port: 27017
+#  user: 
+#  pass: 
+  database: rocket_trabalho2
+  collection: produtos
+elasticsearch:
+  server: 127.0.0.1
+  port: 9200
+  index: rocket
+  type: produtos
