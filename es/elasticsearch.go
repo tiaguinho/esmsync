@@ -1,7 +1,6 @@
 package es
 
 import (
-	"fmt"
 	"github.com/mattbaird/elastigo/lib"
 )
 
