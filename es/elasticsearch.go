@@ -34,6 +34,7 @@ func Connect(conf ElasticConf) *Client {
 	client.Conf = conf
 
 	client.Conn = elastigo.NewConn()
+	client.Conn.SetHosts([]string{conf.Server})
 	client.Conn.SetPort(conf.Port)
 
 	//check if index exists
