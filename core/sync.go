@@ -7,10 +7,10 @@ import (
 )
 
 //sync data between mongo and elasticsearch
-func sync(oplogs interface{}) int64 {
+func sync(oplogs interface{}) int {
 	length := reflect.ValueOf(oplogs).Len()
 
-	var total int64
+	var total int
 	for i := 0; i < length; i++ {
 		esdata := es.Mapping(reflect.ValueOf(oplogs).Index(i).Interface())
 

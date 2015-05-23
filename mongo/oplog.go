@@ -37,7 +37,7 @@ func (c *Client) GetOplogsInsert() []OplogInsert {
 	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogInsert
-	collection.Find(bson.M{"op": "i", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "i", "ns": c.Conf.Database + "." + c.Conf.Collection}).All(&logs)
 
 	return logs
 }
@@ -47,7 +47,7 @@ func (c *Client) GetOplogsUpdate() []OplogUpdate {
 	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogUpdate
-	collection.Find(bson.M{"op": "u", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "u", "ns": c.Conf.Database + "." + c.Conf.Collection}).All(&logs)
 
 	return logs
 }
@@ -57,7 +57,7 @@ func (c *Client) GetOplogsDelete() []OplogDelete {
 	collection := c.Conn.DB("local").C("oplog.rs")
 
 	var logs []OplogDelete
-	collection.Find(bson.M{"op": "d", "ns": c.Conf.Database + "." + c.Conf.Collection, "ts": bson.M{"$type": 17}}).All(&logs)
+	collection.Find(bson.M{"op": "d", "ns": c.Conf.Database + "." + c.Conf.Collection}).All(&logs)
 
 	return logs
 }

@@ -59,9 +59,9 @@ func Start() {
 //start the connection with mongodb and elasticsearch to sync data
 func Do(last_ts int64) {
 	LastTs = last_ts
-	ioutil.WriteFile("./esmsync.txt", []byte(strconv.FormatInt(LastTs, 10)), 0644)
+	ioutil.WriteFile("./esmsync.txt", []byte(strconv.FormatInt(int64(LastTs), 10)), 0644)
 
-	var total int64
+	total := 0
 
 	insertOplogs := mongodb.GetOplogsInsert()
 	if len(insertOplogs) > 0 {
@@ -89,7 +89,7 @@ func Listen() *mgo.Iter {
 
 	var query bson.M
 	if LastTs != 0 {
-		query = bson.M{"_id": bson.M{"$gt": LastTs}}
+		query = bson.M{"ts": bson.M{"$gt": bson.MongoTimestamp(LastTs)}}
 	}
 
 	return collection.Find(query).Sort("$natural").Tail(5 * time.Second)
