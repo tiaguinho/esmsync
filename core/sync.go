@@ -26,10 +26,24 @@ func sync(oplogs interface{}) int {
 
 //sync all data on the collection
 func syncAll() {
-	oplogs := mongodb.GetAll()
-	if len(oplogs) > 0 {
-		total := sync(oplogs)
+	total := mongodb.CountAll()
+	fmt.Println(total, " documents finded")
 
-		fmt.Println(total, " documents synchronized")
+	page := 0
+	limit := 0
+	for total > 0 {
+		skip := page * 100
+		if ok := total - 100; ok > 0 {
+			limit = 100
+		} else {
+			limit = total
+		}
+
+		oplogs := mongodb.GetAll(skip, limit)
+		go sync(oplogs)
+
+		page++
+		total -= limit
 	}
+
 }

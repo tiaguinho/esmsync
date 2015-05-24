@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"gopkg.in/mgo.v2"
+	"gopkg.in/mgo.v2/bson"
 	"log"
 	"time"
 )
@@ -44,12 +45,21 @@ func Connect(conf MongoConf) *Client {
 	return client
 }
 
+//return total of the documents
+func (c *Client) CountAll() int {
+	collection := c.Conn.DB(c.Conf.Database).C(c.Conf.Collection)
+
+	total, _ := collection.Find(bson.M{}).Count()
+
+	return total
+}
+
 //return all documents
-func (c *Client) GetAll() []OplogInsert {
+func (c *Client) GetAll(skip, limit int) []OplogInsert {
 	collection := c.Conn.DB(c.Conf.Database).C(c.Conf.Collection)
 
 	var docs []map[string]interface{}
-	collection.Find(nil).All(&docs)
+	collection.Find(bson.M{}).Skip(skip).Limit(limit).All(&docs)
 
 	logs := make([]OplogInsert, len(docs))
 	if len(docs) > 0 {
