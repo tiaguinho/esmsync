@@ -49,6 +49,17 @@ func (c *Client) GetOplogsUpdate() []OplogUpdate {
 	var logs []OplogUpdate
 	collection.Find(bson.M{"op": "u", "ns": c.Conf.Database + "." + c.Conf.Collection}).All(&logs)
 
+	if len(logs) > 0 {
+		collection := c.Conn.DB(c.Conf.Database).C(c.Conf.Collection)
+
+		var data map[string]interface{}
+		for index, log := range logs {
+			collection.Find(bson.M{"_id": log.O2["_id"]}).One(&data)
+
+			logs[index].O = data
+		}
+	}
+
 	return logs
 }
 

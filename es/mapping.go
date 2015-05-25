@@ -2,6 +2,7 @@ package es
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/tiaguinho/esmsync/mongo"
 	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
@@ -42,12 +43,10 @@ func Mapping(oplog interface{}) (object Elasticsearch) {
 		}
 	case "u":
 		s := oplog.(mongo.OplogUpdate)
-		if s.O["$set"] != nil {
-			data = s.O["$set"].(map[string]interface{})
-			object = Elasticsearch{
-				Id:        s.O2["_id"].Hex(),
-				Operation: "u",
-			}
+		data = s.O
+		object = Elasticsearch{
+			Id:        s.O2["_id"].Hex(),
+			Operation: "u",
 		}
 	case "d":
 		s := oplog.(mongo.OplogDelete)
@@ -67,6 +66,8 @@ func Mapping(oplog interface{}) (object Elasticsearch) {
 			}
 		}
 	}
+	fmt.Println(object.Data)
+	fmt.Println(".........................................................")
 
 	return object
 }
