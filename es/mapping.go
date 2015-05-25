@@ -2,7 +2,6 @@ package es
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/tiaguinho/esmsync/mongo"
 	"gopkg.in/mgo.v2/bson"
 	"io/ioutil"
@@ -66,8 +65,6 @@ func Mapping(oplog interface{}) (object Elasticsearch) {
 			}
 		}
 	}
-	fmt.Println(object.Data)
-	fmt.Println(".........................................................")
 
 	return object
 }
