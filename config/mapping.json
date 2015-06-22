@@ -2,7 +2,8 @@
 	{
 		"mongo" : "nome",
 		"type" : "string",
-		"es" : "nome"
+		"es" : "nome",
+		"convert_iso" : "nome_utf"
 	},
 	{
 		"mongo" : "barcode_ean",
@@ -15,6 +16,11 @@
 		"es" : "sku"
 	},
 	{
+	 	"mongo" : "seo>tags",
+		"type" : "slice",
+		"es" : "tags"
+	},
+	{
 	 	"mongo" : "estoque>barcode_ean",
 		"type" : "slice",
 		"es" : "ean"
@@ -23,5 +29,10 @@
 	 	"mongo" : "estoque>sku",
 		"type" : "slice",
 		"es" : "sku"
+	},
+	{
+	 	"mongo" : "loja_id",
+		"type" : "string",
+		"es" : "loja_id"
 	}
 ] 

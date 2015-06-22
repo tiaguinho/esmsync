@@ -1,6 +1,7 @@
 --- # esmsync configuration file
 config:
   force: true
+  convert_iso: true
 mongo:
   server: 127.0.0.1
   port: 27017

@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"reflect"
 	"strings"
+	"unicode"
 )
 
 //Mapping struct
@@ -14,6 +15,7 @@ type Node struct {
 	MongoField string `json:"mongo"`
 	Type       string `json:"type"`
 	EsField    string `json:"es"`
+	ConvertIso string `json:"convert_iso"`
 }
 
 func getNodesFile() []Node {
@@ -62,6 +64,10 @@ func Mapping(oplog interface{}) (object Elasticsearch) {
 			rs := getValue(node.MongoField, node.Type, data)
 			if rs != nil {
 				object.Data[node.EsField] = rs
+
+				if node.ConvertIso != "" {
+					object.Data[node.ConvertIso] = removeSpecialChar(rs)
+				}
 			}
 		}
 	}
@@ -118,4 +124,44 @@ func extractValue(fields []string, data interface{}) (result interface{}) {
 	}
 
 	return
+}
+
+var special_caracters string = "áâãàäéêẽèëíîĩìïóôõòöúûũùüç"
+var normal_caracters string = "aaaaaeeeeeiiiiiooooouuuuuc"
+
+func removeSpecialChar(value interface{}) (resp interface{}) {
+	special_runes := make([]rune, len(normal_caracters))
+	for index, letter := range special_caracters {
+		if letter != 0 {
+			special_runes[index/2] = letter
+		}
+	}
+
+	normal_runes := make([]rune, len(normal_caracters))
+	for index, letter := range normal_caracters {
+		normal_runes[index] = letter
+	}
+
+	runes := map[rune]rune{}
+	for index, letter := range special_runes {
+		runes[letter] = normal_runes[index]
+	}
+
+	name := strings.Map(func(r rune) rune {
+		switch {
+		case r == ' ':
+			return ' '
+		case unicode.IsLetter(r), unicode.IsDigit(r):
+			if _, ok := runes[r]; ok {
+				return runes[r]
+			}
+
+			return r
+		default:
+			return -1
+		}
+		return -1
+	}, value.(string))
+
+	return name
 }
