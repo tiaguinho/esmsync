@@ -161,7 +161,7 @@ func removeSpecialChar(value interface{}) (resp interface{}) {
 			return -1
 		}
 		return -1
-	}, value.(string))
+	}, strings.ToLower(value.(string)))
 
 	return name
 }
